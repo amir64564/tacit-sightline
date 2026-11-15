@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Sightline is a read-only public window on Tacit: Bitcoin envelopes, the header-relay bridge, and the confidential pools on Ethereum, Base and Robinhood Chain. No wallet, no keys, no fund movement." />
+  <title>Sightline — a public window on Tacit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the numbers</a>
+  <header class="mast">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">
+        <span class="pane pane-l"></span>
+        <span class="seam"></span>
+        <span class="pane pane-r"></span>
+      </div>
+      <div>
+        <p class="kicker">Read-only · mainnet · no wallet</p>
+        <h1>Sightline</h1>
+        <p class="tag">A public window on Tacit — both chains, the bridge, and the privacy boundary.</p>
+      </div>
+    </div>
+    <p class="pledge">This page never asks for a seed phrase or private key, never connects a wallet, and never moves funds. Every figure is fetched in your browser from official Tacit APIs, public RPCs, or Bitcoin explorers. If a source is delayed, blocked, or disagrees with another, that is shown rather than hidden.</p>
+  </header>
+
+  <main id="main">
+    <form id="lookup-form" class="lookup" autocomplete="off">
+      <label for="q">Look up a public footprint</label>
+      <div class="lookup-row">
+        <input id="q" name="q" type="text" spellcheck="false" placeholder="tacit1… · Bitcoin txid · 0x address · or name@namespace" />
+        <button type="submit">Look up</button>
+      </div>
+      <p class="hint">This only shows what is already public. A tacit1 ID opens the official tacitscan page. An EVM address is resolved on Ethereum and Base (balances, canonical Tacit tokens, XNS name). Nothing confidential can appear here, by design.</p>
+    </form>
+    <section id="lookup-out" class="lookup-out" hidden></section>
+
+    <section class="status" id="status">
+      <h2 class="sr">Source status</h2>
+      <ul id="status-list" class="chips"></ul>
+    </section>
+
+    <section class="stage">
+      <article class="card chain" id="bitcoin-card">
+        <header>
+          <p class="eyebrow">Bitcoin</p>
+          <h2>Envelopes, assets, the native AMM</h2>
+          <p class="lede">Assets are issued and moved in Taproot envelopes. <a href="https://tacitscan.io/" target="_blank" rel="noopener">tacitscan.io</a> is the dedicated envelope decoder; this pane summarises the same public mainnet record.</p>
+        </header>
+        <div id="bitcoin-body" class="body pending">Loading official Bitcoin-side data…</div>
+      </article>
+
+      <article class="card bridge" id="bridge-card">
+        <header>
+          <p class="eyebrow">The bridge</p>
+          <h2>Header relay and in-flight value</h2>
+          <p class="lede">SP1 proofs carry state between Bitcoin and the Ethereum confidential pool. Heights and counts are public; amounts inside notes are not.</p>
+        </header>
+        <div id="bridge-body" class="body pending">Loading reflection status…</div>
+      </article>
+
+      <article class="card chain" id="evm-card">
+        <header>
+          <p class="eyebrow">Ethereum · Base · Robinhood</p>
+          <h2>Confidential pool and the pay pool</h2>
+          <p class="lede">The DeFi confidential pool lives on Ethereum. A separate pay pool (ETH only) is deployed at the same address on Ethereum, Base, Robinhood Chain and MegaETH. The two pools do not share notes.</p>
+        </header>
+        <div id="evm-body" class="body pending">Calling public RPCs and keepers…</div>
+      </article>
+    </section>
+
+    <section class="card privacy" id="privacy-card">
+      <header>
+        <p class="eyebrow">The privacy boundary</p>
+        <h2>What an observer can see, and what stays hidden</h2>
+        <p class="lede">Tacit is confidential, not invisible. This panel is a map of that line, filled with numbers measured from the sources above. It is honest about its own blind spots.</p>
+      </header>
+      <div id="privacy-body" class="body pending">Waiting on live counts…</div>
+    </section>
+
+    <section class="card" id="verify-card">
+      <header>
+        <p class="eyebrow">Correctness</p>
+        <h2>Re-derive the headlines yourself</h2>
+        <p class="lede">Each command talks to the same public endpoint this page used. None of them require a key.</p>
+      </header>
+      <div id="verify-body" class="body pending"></div>
+    </section>
+
+    <section class="card sources" id="sources-card">
+      <header>
+        <p class="eyebrow">Provenance</p>
+        <h2>Contracts, APIs, and how this page fetches them</h2>
+      </header>
+      <div class="body">
+        <p>Official documentation and addresses are taken from <a href="https://github.com/src-company/tacit/blob/main/docs/DEPLOYMENTS.md" target="_blank" rel="noopener">src-company/tacit docs/DEPLOYMENTS.md</a>, <a href="https://tacit.finance/build/" target="_blank" rel="noopener">tacit.finance/build</a>, and <a href="https://xns.name/blog/xnsv2-is-live" target="_blank" rel="noopener">XNS v2</a>. The public API is <a href="https://api.tacit.finance" target="_blank" rel="noopener">api.tacit.finance</a> (no key).</p>
+        <p>Some official API routes (<code>/assets</code>, <code>/amm/pools</code>, <code>/market</code>) send <code>Access-Control-Allow-Origin: https://tacit.finance</code>, so a third-party page cannot read them directly in the browser. Sightline tries a direct request first, then — only if the browser blocks it — refetches the same official URL through <a href="https://allorigins.win" target="_blank" rel="noopener">allorigins</a>, and labels that path. You can always open the official JSON yourself. Everything else used here already allows any origin, or is a public Ethereum/Bitcoin RPC.</p>
+        <ul class="addr-list">
+          <li><span>ConfidentialPool (Ethereum)</span> <code>0x000000000Ed1eabD231Be41d93b719056F7febFC</code></li>
+          <li><span>CollateralEngine</span> <code>0x000000003f608BDdF0ca45934003ffb9DbDF70DB</code></li>
+          <li><span>TAC</span> <code>0xA1313eb9f3A445606D9583bcAc3ebeB56a858279</code></li>
+          <li><span>tacBTC / cBTC ERC-20</span> <code>0xdf1d99148bEb7a9AFf1d95C49B3d22b7ed90D696</code></li>
+          <li><span>tacUSD / cUSD ERC-20</span> <code>0x23cACFFAc2674514A6d4F6cD420B4cc2aC921564</code></li>
+          <li><span>wTAC</span> <code>0x2018139a8FDd3666855BE3315C7683b4D6aB7AEf</code></li>
+          <li><span>TacitEvmPool (all pay-pool chains)</span> <code>0x000000c2A20657CE25f2Ba99737933D031AFBEE9</code></li>
+          <li><span>XNS registry (Ethereum)</span> <code>0x6e797ba2d3103aF167918e71a7E01DE40D45f74b</code></li>
+        </ul>
+        <p class="repo-line">Source of this page: <a id="repo-link" href="https://github.com/amir64564/tacit-sightline">github.com/amir64564/tacit-sightline</a>. Live URL: this file, hosted on GitHub Pages once published.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Sightline is an independent read-only explorer built for <a href="https://poidh.xyz/base/bounty/1519">poidh bounty #1519</a>. It is not affiliated with Tacit. Numbers can lag the chain by a few blocks; if two sources disagree, both are shown.</p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
